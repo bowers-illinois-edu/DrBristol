@@ -9,15 +9,17 @@
 ##' @param n TODO
 ##' @param thep TODO
 ##' @return A vector representing TODO
+##' @importFrom BiasedUrn dFNCHypergeo
+##' @importFrom stats uniroot 
 ##' @export
-sens_analysis <- function(m1, m2, n, thep) {
-  find_odds <- function(x, thep = .05) {
+sens_analysis <- function(m1, m2, n, thep=.05) {
+  find_odds <- function(x, thep = thep) {
     ## thep is the desired pvalue
     ## x is the odds
     if (x < 0) {
       return(999)
     }
-    res0 <- dFNCHypergeo(seq(0, m1), m1 = m1, m2 = m2, n = m3, odds = x)
+    res0 <- dFNCHypergeo(seq(0, m1), m1 = m1, m2 = m2, n = n, odds = x)
     return(res0[3] - thep)
   }
 
