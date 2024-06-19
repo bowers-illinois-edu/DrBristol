@@ -1,7 +1,7 @@
 Package: DrBristol
 Title: Tests Hypotheses Using Biased and Unbiased Urn Models
 Version: 0.0.0.9000
-Authors@R: c(person("Matias", "Lopez", , "first.last@example.com", role = c("aut", "cre"), comment = c(ORCID = "YOUR-ORCID-ID")),
+Authors@R: c(person("Matias", "Lopez", role = c("aut", "cre"),  email="first.last@example.com", comment = c(ORCID = "YOUR-ORCID-ID")),
       person("Jake", "Bowers", role = "aut", email = "jwbowers@illinois.edu", comment = c(ORCID = "0000-0002-4048-1166")))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
