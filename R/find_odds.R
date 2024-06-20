@@ -7,7 +7,7 @@
 ##' @param obs_support An integer representing the number of observations in favor of the working hypothesis. Must be less than or equal to the total.
 ##' @param total_obs An integer representing the total number of observations
 ##' @param thep The p-value threshold
-##' @return A vector representing a big value to state that x>0
+##' @return 
 ##' @importFrom BiasedUrn dFNCHypergeo
 ##' @importFrom stats uniroot 
 ##' @export
