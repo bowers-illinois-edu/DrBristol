@@ -1,6 +1,6 @@
 # DrBristol
 
-This is an R package that does XXXX
+A set of functions to compute $p$-values and perform sensitivity analysis, adapting Fisher’s $p$-value test to case studies and process tracing. It uses unbiased and biased urn models to draw null distributions in the absence of randomization.
 
 # Installation Instructions
 
