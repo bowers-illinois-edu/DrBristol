@@ -1,4 +1,4 @@
-##' Find a p-value given opposing and supporting information
+##' Find a p-value given a certain number of observations in favor of the working hypothesis among a total number of observations
 ##' 
 ##' @param obs_support An integer representing the number of observations in favor of the working hypothesis. Must be less than or equal to the total.
 ##' @param total_obs An integer representing the total number of observations
