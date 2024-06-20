@@ -27,7 +27,6 @@ sens_analysis <- function(obs_support, obs_oppose, total_obs, p_thresh1=0.05,p_t
   theodds1 <- uniroot(f = find_odds, interval = c(.0001, n * 10), trace = 2, extendInt = "yes")
   found_odds1 <- theodds1$root
   the_found_dens1 <- dFNCHypergeo(seq(0, obs_support), m1 = obs_support, m1 = obs_oppose, n = total_obs, odds = found_odds1)
-  return(the_found_dens1)
 }
 
 sens_analysis <- function(obs_support, obs_oppose, total_obs, p_thresh1=0.05,p_thresh2=0.1) {
@@ -47,7 +46,6 @@ sens_analysis <- function(obs_support, obs_oppose, total_obs, p_thresh1=0.05,p_t
   theodds2 <- uniroot(f = find_odds, interval = c(.0001, n * 10), trace = 2, extendInt = "yes")
   found_odds2 <- theodds2$root
   the_found_dens2 <- dFNCHypergeo(seq(0, obs_support), m1 = obs_support, m1 = obs_oppose, n = total_obs, odds = found_odds2)
-  return(the_found_dens2)
 }
 
 
