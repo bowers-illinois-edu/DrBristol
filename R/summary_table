@@ -1,4 +1,7 @@
 
+DrBristol<-function(obs_support,total_obs){
+
+
 find_p <- function(obs_support,total_obs){
   ## Test to make sure that obs_support is less than or equal to total_obs
   stopifnot("The number of observations in favor of the working hypothesis must be less than or equal to the total number of observations"=obs_support<=total_obs)
@@ -50,12 +53,14 @@ sens_analysis <- function(obs_support, obs_oppose, total_obs, p_thresh1=0.05,p_t
 
 ### below is my attempt to make an output table
 
+
 # placing information in dataframe
-table_data <- data.frame(
+table <- data.frame(
   "p-value" = thep,
   "Odds ratio to p=0.05" = the_found_dens1,
   "Odds ratio to p=0.10"  = the_found_dens2
 )
 
 # Print the table
-print(knitr::kable(table_data, align = "c"), type = "text")
+print(knitr::kable(table, align = "c"), type = "text")
+}
