@@ -1,0 +1,61 @@
+
+find_p <- function(obs_support,total_obs){
+  ## Test to make sure that obs_support is less than or equal to total_obs
+  stopifnot("The number of observations in favor of the working hypothesis must be less than or equal to the total number of observations"=obs_support<=total_obs)
+  obs_oppose <- obs_support+1
+  stopifnot("Observations are already compatible with the null. The number of observations in favor of the working hypothesis must be greater than or equal to half of the total number of observations"=obs_support >= (total_obs/2))
+  ## We assume odds=1 here
+ thep <- dFNCHypergeo(x=obs_support, m1 = obs_support, m2 = obs_oppose,
+                      n = total_obs, odds = 1)
+
+sens_analysis <- function(obs_support, obs_oppose, total_obs, p_thresh1=0.05,p_thresh2=0.1) {
+  find_odds1 <- function(x, p = p_thresh1) {
+    ## p is the desired pvalue
+    ## x is the odds
+    if (x < 0) {
+      return(999)
+    }
+#I am trying to avoid confusing the p output from the unbiased urn and the p threshold in the sensitivity analysis
+
+    res0 <- dFNCHypergeo(seq(0, obs_support), m1 = obs_support, m1 = obs_oppose, n = total_obs, odds = x)
+    return(res0[3] - thep)
+  }
+
+  theodds1 <- uniroot(f = find_odds, interval = c(.0001, n * 10), trace = 2, extendInt = "yes")
+  found_odds1 <- theodds1$root
+  the_found_dens1 <- dFNCHypergeo(seq(0, obs_support), m1 = obs_support, m1 = obs_oppose, n = total_obs, odds = found_odds1)
+  return(the_found_dens1)
+}
+
+sens_analysis <- function(obs_support, obs_oppose, total_obs, p_thresh1=0.05,p_thresh2=0.1) {
+  find_odds1 <- function(x, p = p_thresh2) {
+    ## p is the desired pvalue
+    ## x is the odds
+    if (x < 0) {
+      return(999)
+    }
+
+# below for P=010
+
+    res0 <- dFNCHypergeo(seq(0, obs_support), m1 = obs_support, m1 = obs_oppose, n = total_obs, odds = x)
+    return(res0[3] - thep)
+  }
+
+  theodds2 <- uniroot(f = find_odds, interval = c(.0001, n * 10), trace = 2, extendInt = "yes")
+  found_odds2 <- theodds2$root
+  the_found_dens2 <- dFNCHypergeo(seq(0, obs_support), m1 = obs_support, m1 = obs_oppose, n = total_obs, odds = found_odds2)
+  return(the_found_dens2)
+}
+
+
+### below is my attempt to make an output table
+
+# placing information in dataframe
+table_data <- data.frame(
+  "p-value" = thep,
+  "Odds ratio to p=0.05" = the_found_dens1,
+  "Odds ratio to p=0.10"  = the_found_dens2
+)
+
+# Print the table
+print(knitr::kable(table_data, align = "c"), type = "text")
