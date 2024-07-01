@@ -1,6 +1,6 @@
 ##' Find odds
 ##'
-##'  TODO Description
+##'  A function that allows the researcher to input the likelihood of data or to find how mush bias in datacollection would be nescessary to obtain a p>0.05 or p>0.10 result using the same data. 
 ##'
 ##'
 ##' @title Find odds given ideas about unequally easy evidence
