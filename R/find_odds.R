@@ -1,20 +1,18 @@
 ##' Find odds
 ##'
-##'  A function that allows the researcher to input the likelihood of data or to find how mush bias in datacollection would be nescessary to obtain a p>0.05 or p>0.10 result using the same data. 
+##'  A function that allows the researcher to input the likelihood of data or to find how mush bias in datacollection would be nescessary to obtain a p>0.05 or p>0.10 result using the same data.
 ##'
 ##'
 ##' @title Find odds given ideas about unequally easy evidence
 ##' @param obs_support An integer representing the number of observations in favor of the working hypothesis. Must be less than or equal to the total.
 ##' @param total_obs An integer representing the total number of observations
 ##' @param thep The p-value threshold
-##' @return 
+##' @return
 ##' @importFrom BiasedUrn dFNCHypergeo
-##' @importFrom stats uniroot 
+##' @importFrom stats uniroot
 ##' @export
 
-  obs_oppose <- obs_support+1
-
-sens_analysis <- function(obs_support, obs_oppose, total_obs, thep=.05) {
+sens_analysis <- function(obs_support, obs_oppose, total_obs, thep = .05) {
   find_odds <- function(x, thep = thep) {
     ## thep is the desired pvalue
     ## x is the odds
