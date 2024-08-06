@@ -4,23 +4,21 @@
 \alias{sens_analysis}
 \title{Find odds given ideas about unequally easy evidence}
 \usage{
-sens_analysis(m1, m2, n, thep)
+sens_analysis(obs_support, obs_oppose, total_obs, thep = 0.05)
 }
 \arguments{
-\item{m1}{TODO}
+\item{obs_support}{An integer representing the number of observations in favor of the working hypothesis. Must be less than or equal to the total.}
 
-\item{m2}{TODO}
+\item{total_obs}{An integer representing the total number of observations}
 
-\item{n}{TODO}
-
-\item{thep}{TODO}
+\item{thep}{The p-value threshold}
 }
 \value{
-A vector representing TODO
+The odds required for the p-value to be equal to that specified in thep
 }
 \description{
 Find odds
 }
 \details{
-TODO Description
+A function that allows the researcher to input the likelihood of data or to find how mush bias in datacollection would be nescessary to obtain a p>0.05 or p>0.10 result using the same data.
 }
