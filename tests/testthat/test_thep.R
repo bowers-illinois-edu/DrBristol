@@ -32,6 +32,27 @@ test_that("Warnings work", {
   expect_error(find_p_two_types(obs_support = 2, total_obs = 10))
 })
 
+
+
+find_odds <- function(omega, m1, m2, n, x, alpha_thresh = .05, alpha_adjust = 1) {
+  # m1= number of pieces of evidence supporting the working theory
+  # m2 = number of pieces of evidence supporting the rival theory
+  # n = number of pieces drawn from the urn
+  # odds = odds of drawing evidence supporting the working theory versus rival theory
+  # x = number of pieces of evidence supporting the working theory in the sample of size n
+  p_found <- dFNCHypergeo(x = x, m1 = m1, m2 = m2, n = n, odds = omega)
+  critical_value <- alpha_thresh / alpha_adjust
+  return(p_found - critical_value)
+}
+
+found_odds_ex1 <- uniroot(
+  f = find_odds, m1 = 2, m2 = 3, n = 3, x = 2,
+  interval = c(.0001, 10), trace = 2, extendInt = "upX"
+)$root
+
+the_found_dens_ex1 <- dFNCHypergeo(c(0, 1, 2), m1 = 2, m2 = 3, n = 3, odds = found_odds_ex1)
+
+
 library(partitions)
 # Define the urn composition
 urn <- c(2, 3) # 2 red, 3 black

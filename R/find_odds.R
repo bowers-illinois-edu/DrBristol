@@ -1,30 +1,51 @@
-##' Find odds
-##'
-##'  A function that allows the researcher to input the likelihood of data or to find how mush bias in datacollection would be nescessary to obtain a p>0.05 or p>0.10 result using the same data.
-##'
-##'
-##' @title Find odds given ideas about unequally easy evidence
-##' @param obs_support An integer representing the number of observations in favor of the working hypothesis. Must be less than or equal to the total.
-##' @param total_obs An integer representing the total number of observations
-##' @param thep The p-value threshold
-##' @return The odds required for the p-value to be equal to that specified in thep
-##' @importFrom BiasedUrn dFNCHypergeo
-##' @importFrom stats uniroot
-##' @export
-
-sens_analysis <- function(obs_support, obs_oppose, total_obs, thep = .05) {
-  find_odds <- function(x, thep = thep) {
-    ## thep is the desired pvalue
-    ## x is the odds
-    if (x < 0) {
-      return(999)
-    }
-    res0 <- dFNCHypergeo(seq(0, obs_support), m1 = obs_support, m1 = obs_oppose, n = total_obs, odds = x)
-    return(res0[3] - thep)
+#' Sensitivity analysis for simple urn models
+#'
+#'
+#' A function that allows the researcher to calculate the p-value arising from an urn
+#' where the probability of drawing a rival supporting observation is not equal to the
+#' probability of drawing a working-theory supporting observation.
+#'
+#'
+#'
+#' @param obs_support An integer representing the number of observations
+#' in favor of the working hypothesis. Must be less than or equal to the total.
+#' @param obs_oppose An integer representing the number of observations in against
+#' the working hypothesis. Must be less than or equal to the total.
+#' @param total_obs An integer representing the total number of observations
+#' @param thep A decimal (Double). The p-value threshold. Default is p=.05.
+#' @return The p-value for a given amount of bias in drawing observations from the urn.
+#' @importFrom BiasedUrn dFNCHypergeo
+#' @importFrom stats uniroot
+#' @export
+sens_urn <- function(obs_support, obs_oppose, p_threshold = .05) {
+  find_odds <- function(omega, m1, m2, n, x, alpha_thresh, alpha_adjust) {
+    p_found <- dFNCHypergeo(x = x, m1 = m1, m2 = m2, n = n, odds = omega)
+    critical_value <- alpha_thresh / alpha_adjust
+    return(p_found - critical_value)
   }
 
-  theodds <- uniroot(f = find_odds, interval = c(.0001, n * 10), trace = 2, extendInt = "yes")
-  found_odds <- theodds$root
-  the_found_dens <- dFNCHypergeo(seq(0, obs_support), m1 = obs_support, m1 = obs_oppose, n = total_obs, odds = found_odds)
-  return(the_found_dens)
+  urn_total <- max(obs_support + obs_oppose + 1, obs_oppose)
+  theodds <- uniroot(
+    f = find_odds,
+    m1 = obs_support, m2 = obs_oppose, n = urn_total, x = obs_support,
+    alpha_thresh = alpha_thresh, alpha_adjust = alpha_adjust,
+    interval = c(.0001, n * 10), trace = 2, extendInt = "upX"
+  )$root
+  the_found_dens <- dFNCHypergeo(seq(0, obs_support),
+    m1 = obs_support, m2 = obs_oppose, n = total_obs, odds = found_odds
+  )
+  return(c(theodds, the_found_dens))
+}
+
+#' @param m1 Integer. number of pieces of evidence supporting the working theory
+#' @param m2 Integer. number of pieces of evidence supporting the rival theory
+#' @param n Integer. number of pieces drawn from the urn
+#' @param odds Double. odds of drawing evidence supporting the working theory versus rival theory
+#' @param x Integer. number of pieces of evidence supporting the working theory in the sample of size n
+#' @importFrom BiasedUrn dFNCHypergeo
+#' @export
+find_odds <- function(omega, m1, m2, n, x, alpha_thresh = .05, alpha_adjust = 1) {
+  p_found <- dFNCHypergeo(x = x, m1 = m1, m2 = m2, n = n, odds = omega)
+  critical_value <- alpha_thresh / alpha_adjust
+  return(p_found - critical_value)
 }
