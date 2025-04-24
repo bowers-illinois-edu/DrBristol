@@ -2,7 +2,6 @@
 
 export(find_odds)
 export(find_p_two_types)
-export(find_p_two_types_w)
 export(sens_urn)
 export(sim_urn)
 importFrom(BiasedUrn,dFNCHypergeo)
