@@ -1,10 +1,17 @@
 # DrBristol
 
-A set of functions to compute $p$-values and perform sensitivity analysis, adapting Fisher’s $p$-value test to case studies and process tracing. It uses unbiased and biased urn models to draw null distributions in the absence of randomization.
+A set of functions to compute $p$-values and perform sensitivity analysis, adapting Fisher’s $p$-value test to case studies and process tracing following López and Bowers (2025). It uses unbiased and biased urn models to draw null distributions in the absence of randomization.
 
 # Installation Instructions
 
-# Quick Start 
+Since this is a package still under development, we have not yet submitted it to CRAN. You can install it directly from Github using the following commands:
+
+```r
+library(remotes)
+install_github('bowers-illinois-edu/DrBristol')
+```
+
+# Quick Start
 
 # Name of the Package
 
