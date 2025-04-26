@@ -9,7 +9,7 @@ summarizing the evidence against the rival theory provided by the working theory
 
     <a class="navbar-brand me-2" href="../index.html">DrBristol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.0000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,13 +68,13 @@ observations in favor of the working hypothesis. Must be less than or equal to t
 This can be interpreted as "bias" in observation. Or "relative ease" of observation.</p></dd>
 
 
+<dt id="arg-weights">weights<a class="anchor" aria-label="anchor" href="#arg-weights"></a></dt>
+<dd><p>Double. Default is equal weight for each observation when weights=NULL is <code>rep(1,obs_support)</code>. To indicate that one observation should have twice the weight of any other one might use <code>rep(c(2,1),c(1,obs_support-1))</code></p></dd>
+
+
 <dt id="arg-interpretation">interpretation<a class="anchor" aria-label="anchor" href="#arg-interpretation"></a></dt>
-<dd><p>TRUE if the function returns text helping
+<dd><p>Logical. TRUE if the function returns text helping
 to interpret the result, FALSE (default option) to returns only the p-value</p></dd>
-
-
-<dt id="arg-smoking-gun-weight">smoking_gun_weight<a class="anchor" aria-label="anchor" href="#arg-smoking-gun-weight"></a></dt>
-<dd><p>Double. Additional weight given to a single observation out of the total.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -83,12 +83,7 @@ to interpret the result, FALSE (default option) to returns only the p-value</p><
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function accomodates urns where working theory supporting observations are systematically easier or more difficulty to observe that rival supporting observations (<code>odds</code>)</p>
-<p>And it currently also supports designs where one observation out of the
-total supporting the working theory is  particularly compelling (a "smoking
-gun"). For example, if observation 1 is worth 2 other observations, the urn can reflect
-this by increasing the number of observations supporting the rival theory in the urn, accounting for the weight of
-that smoking gun observation.</p>
+    <p>This function accomodates urns where working theory supporting observations are systematically easier or more difficulty to observe that rival supporting observations (<code>odds</code>). And it currently also supports designs where one observation out of the total supporting the working theory is  particularly compelling (a "smoking gun"). For example, if observation 1 is worth 2 other observations, the urn can reflect this by increasing the number of observations supporting the rival theory in the urn, accounting for the weight of that smoking gun observation.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
