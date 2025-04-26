@@ -1,3 +1,3 @@
-# DrBristol (development version)
+# DrBristol (Version: 0.0.1.0000)
 
-* Initial CRAN submission.
+* Alpha version with full functionality as of Lopez and Bowers (2025)
