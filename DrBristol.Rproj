@@ -1,4 +1,5 @@
 Version: 1.0
+ProjectId: d879966c-f8ee-44b9-ad78-bc3a7c3db98c
 
 RestoreWorkspace: Default
 SaveWorkspace: Default
@@ -15,6 +16,7 @@ LaTeX: pdfLaTeX
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
+PackageRoxygenize: rd,collate,namespace,vignette
 
 MarkdownWrap: Column
 MarkdownWrapAtColumn: 80

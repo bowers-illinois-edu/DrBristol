@@ -22,10 +22,10 @@ observations in favor of the working hypothesis. Must be less than or equal to t
 \item{odds}{The odds of observing a rival versus working-theory observation.
 This can be interpreted as "bias" in observation. Or "relative ease" of observation.}
 
-\item{interpretation}{TRUE if the function returns text helping
-to interpret the result, FALSE (default option) to returns only the p-value}
+\item{weights}{Double. Default is equal weight for each observation when weights=NULL is \code{rep(1,obs_support)}. To indicate that one observation should have twice the weight of any other one might use \code{rep(c(2,1),c(1,obs_support-1))}}
 
-\item{smoking_gun_weight}{Double. Additional weight given to a single observation out of the total.}
+\item{interpretation}{Logical. TRUE if the function returns text helping
+to interpret the result, FALSE (default option) to returns only the p-value}
 }
 \value{
 Either a p-value (numeric, scalar) or a list containing the p-value and text containing an interpretation
@@ -35,11 +35,5 @@ When an observation can either support a working theory or a rival theory, this 
 summarizing the evidence against the rival theory provided by the working theory.
 }
 \details{
-This function accomodates urns where working theory supporting observations are systematically easier or more difficulty to observe that rival supporting observations (\code{odds})
-
-And it currently also supports designs where one observation out of the
-total supporting the working theory is  particularly compelling (a "smoking
-gun"). For example, if observation 1 is worth 2 other observations, the urn can reflect
-this by increasing the number of observations supporting the rival theory in the urn, accounting for the weight of
-that smoking gun observation.
+This function accomodates urns where working theory supporting observations are systematically easier or more difficulty to observe that rival supporting observations (\code{odds}). And it currently also supports designs where one observation out of the total supporting the working theory is  particularly compelling (a "smoking gun"). For example, if observation 1 is worth 2 other observations, the urn can reflect this by increasing the number of observations supporting the rival theory in the urn, accounting for the weight of that smoking gun observation.
 }
