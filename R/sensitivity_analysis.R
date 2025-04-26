@@ -5,9 +5,6 @@
 #' drawing a working theory supporting observation over a rival theory supporting observation
 #' required to increase a p-value to above a certain value.
 #'
-#'
-#'
-#'
 #' @param obs_support An integer representing the number of observations
 #' in favor of the working hypothesis. Must be less than or equal to the total.
 #' @param total_obs An integer representing the total number of observations
@@ -43,7 +40,6 @@ sens_urn <- function(obs_support, total_obs, weights = NULL, p_threshold = .05) 
   return(list(w = theodds, p = thep_at_theodds))
 }
 #' @examples
-#' ...
 #' # What is the odds that would bring our p=.02 to p \approx .05
 #' find_p_two_types(obs_support = 7, total_obs = 10, odds = 1)
 #' sens_urn(obs_support = 7, total_obs = 10, p_threshold = .05)$w
