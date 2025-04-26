@@ -1,11 +1,10 @@
 # Test the p creation function
 
 ## The next lines are for use when creating the tests. Change interactive<-FALSE for production
-interactive <- FALSE
-if (interactive) {
-  library(devtools)
-  load_all() ## use  this during debugging
-}
+## interactive <- FALSE
+## if (interactive) {
+##   devtools::load_all() ## use  this during debugging
+## }
 
 test_that("It gives the correct p-value", {
   res <- find_p_two_types(obs_support = 7, total_obs = 10)

@@ -24,8 +24,14 @@
 #' find_p_two_types(obs_support = 7, total_obs = 10, interpretation = TRUE, odds = .5)
 #' find_p_two_types(obs_support = 7, total_obs = 10, interpretation = TRUE, odds = 2)
 #' # Equal probability, Unequal evidentiary weight, 2 kinds of evidence
-#' find_p_two_types(obs_support = 7, total_obs = 10, weights = rep(1, 7), interpretation = TRUE, odds = 1)
-#' find_p_two_types(obs_support = 7, total_obs = 10, weights = rep(c(2, 1), c(1, 7 - 1)), interpretation = TRUE, odds = 1)
+#' find_p_two_types(
+#'   obs_support = 7, total_obs = 10, weights = rep(1, 7),
+#'   interpretation = TRUE, odds = 1
+#' )
+#' find_p_two_types(
+#'   obs_support = 7, total_obs = 10,
+#'   weights = rep(c(2, 1), c(1, 7 - 1)), interpretation = TRUE, odds = 1
+#' )
 #' @export
 find_p_two_types <- function(obs_support, total_obs, odds = 1, weights = NULL, interpretation = FALSE) {
   if (is.null(weights)) {

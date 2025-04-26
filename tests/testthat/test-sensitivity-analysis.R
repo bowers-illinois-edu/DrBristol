@@ -1,11 +1,10 @@
 ## Tests of the sensitivity analysis code
 
 ## The next lines are for use when creating the tests. Change interactive<-FALSE for production
-interactive <- FALSE
-if (interactive) {
-  library(devtools)
-  load_all() ## use  this during debugging
-}
+## interactive <- FALSE
+## if (interactive) {
+##   devtools::load_all() ## use  this during debugging
+## }
 
 test_that("Sensitivity analysis function gives same answer as the by hand version", {
   ## Define the by hand functions
