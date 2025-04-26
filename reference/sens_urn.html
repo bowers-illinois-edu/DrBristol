@@ -70,9 +70,23 @@ in favor of the working hypothesis. Must be less than or equal to the total.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>The p-value for a given amount of bias in drawing observations from the urn.</p>
+    <p>A list with two elements:
+(1) in <code>w</code> the differential odds of observing a working theory supporting observation over a rival theory supporting observation.
+(2) in <code>p</code> The p-value given the found <code>w</code>.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># What is the odds that would bring our p=.02 to p \approx .05</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="find_p_two_types.html">find_p_two_types</a></span><span class="op">(</span>obs_support <span class="op">=</span> <span class="fl">7</span>, total_obs <span class="op">=</span> <span class="fl">10</span>, odds <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01864802</span>
+<span class="r-in"><span><span class="fu">sens_urn</span><span class="op">(</span>obs_support <span class="op">=</span> <span class="fl">7</span>, total_obs <span class="op">=</span> <span class="fl">10</span>, p_threshold <span class="op">=</span> <span class="fl">.05</span><span class="op">)</span><span class="op">$</span><span class="va">w</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.58928</span>
+<span class="r-in"><span><span class="co"># Notice that this is correct:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="find_p_two_types.html">find_p_two_types</a></span><span class="op">(</span>obs_support <span class="op">=</span> <span class="fl">7</span>, total_obs <span class="op">=</span> <span class="fl">10</span>, odds <span class="op">=</span> <span class="fl">1.58928</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.04999995</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
