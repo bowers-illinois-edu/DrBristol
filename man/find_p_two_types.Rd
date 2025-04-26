@@ -37,3 +37,15 @@ summarizing the evidence against the rival theory provided by the working theory
 \details{
 This function accomodates urns where working theory supporting observations are systematically easier or more difficulty to observe that rival supporting observations (\code{odds}). And it currently also supports designs where one observation out of the total supporting the working theory is  particularly compelling (a "smoking gun"). For example, if observation 1 is worth 2 other observations, the urn can reflect this by increasing the number of observations supporting the rival theory in the urn, accounting for the weight of that smoking gun observation.
 }
+\examples{
+# Equal probability, 2 kinds of evidence
+find_p_two_types(obs_support = 7, total_obs = 10)
+# Equal probability, 2 kinds of evidence with interpretation printed
+find_p_two_types(obs_support = 7, total_obs = 10, interpretation = TRUE)
+# Unequal probability, 2 kinds of evidence with interpretation printed
+find_p_two_types(obs_support = 7, total_obs = 10, interpretation = TRUE, odds = .5)
+find_p_two_types(obs_support = 7, total_obs = 10, interpretation = TRUE, odds = 2)
+# Equal probability, Unequal evidentiary weight, 2 kinds of evidence
+find_p_two_types(obs_support = 7, total_obs = 10, weights = rep(1, 7), interpretation = TRUE, odds = 1)
+find_p_two_types(obs_support = 7, total_obs = 10, weights = rep(c(2, 1), c(1, 7 - 1)), interpretation = TRUE, odds = 1)
+}

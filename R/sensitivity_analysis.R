@@ -10,7 +10,15 @@
 #' @param total_obs An integer representing the total number of observations
 #' @param weights A vector of numeric weights representing the differential evidentiary weight of the working theory supporting observations.
 #' @param p_threshold A decimal (Double). The p-value threshold. Default is p=.05.
-#' @return The p-value for a given amount of bias in drawing observations from the urn.
+#' @return A list with two elements:
+#' (1) in \code{w} the differential odds of observing a working theory supporting observation over a rival theory supporting observation.
+#' (2) in \code{p} The p-value given the found \code{w}.
+#' @examples
+#' # What is the odds that would bring our p=.02 to p \approx .05
+#' find_p_two_types(obs_support = 7, total_obs = 10, odds = 1)
+#' sens_urn(obs_support = 7, total_obs = 10, p_threshold = .05)$w
+#' # Notice that this is correct:
+#' find_p_two_types(obs_support = 7, total_obs = 10, odds = 1.58928)
 #' @importFrom BiasedUrn dFNCHypergeo
 #' @importFrom stats uniroot
 #' @export
@@ -39,9 +47,3 @@ sens_urn <- function(obs_support, total_obs, weights = NULL, p_threshold = .05) 
   )
   return(list(w = theodds, p = thep_at_theodds))
 }
-#' @examples
-#' # What is the odds that would bring our p=.02 to p \approx .05
-#' find_p_two_types(obs_support = 7, total_obs = 10, odds = 1)
-#' sens_urn(obs_support = 7, total_obs = 10, p_threshold = .05)$w
-#' # Notice that this is correct:
-#' find_p_two_types(obs_support = 7, total_obs = 10, odds = 1.58928)

@@ -2,6 +2,5 @@
 
 export(find_p_two_types)
 export(sens_urn)
-export(sim_urn)
 importFrom(BiasedUrn,dFNCHypergeo)
 importFrom(stats,uniroot)

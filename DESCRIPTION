@@ -1,7 +1,7 @@
 Package: DrBristol
-Title: Hypotheses Using Biased and Unbiased Urn Models Inspired by Muriel Bristol and Ronald Fisher
+Title: Hypothesis Tests Using Biased and Unbiased Urn Models Inspired by Muriel Bristol and Ronald Fisher
 Version: 0.0.1.0000
-Authors@R: c(person("Matias", "Lopez", role = c("aut", "cre"),  email="first.last@example.com", comment = c(ORCID = "YOUR-ORCID-ID")),
+Authors@R: c(person("Matias", "Lopez", role = c("aut", "cre"),  email="matiaslopez.uy@gmail.com", comment = c(ORCID = "0000-0002-0871-2841")),
       person("Jake", "Bowers", role ="aut", email = "jwbowers@illinois.edu", comment = c(ORCID = "0000-0002-4048-1166")))
 Description: This package implements the tests and sensitivity analyses described in Lopez and Bowers (20XX). Forthcoming. Title.
 License: MIT + file LICENSE

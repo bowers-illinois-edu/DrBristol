@@ -17,10 +17,19 @@ in favor of the working hypothesis. Must be less than or equal to the total.}
 \item{p_threshold}{A decimal (Double). The p-value threshold. Default is p=.05.}
 }
 \value{
-The p-value for a given amount of bias in drawing observations from the urn.
+A list with two elements:
+(1) in \code{w} the differential odds of observing a working theory supporting observation over a rival theory supporting observation.
+(2) in \code{p} The p-value given the found \code{w}.
 }
 \description{
 A function that allows the researcher to calculate the odds of
 drawing a working theory supporting observation over a rival theory supporting observation
 required to increase a p-value to above a certain value.
+}
+\examples{
+# What is the odds that would bring our p=.02 to p \approx .05
+find_p_two_types(obs_support = 7, total_obs = 10, odds = 1)
+sens_urn(obs_support = 7, total_obs = 10, p_threshold = .05)$w
+# Notice that this is correct:
+find_p_two_types(obs_support = 7, total_obs = 10, odds = 1.58928)
 }
