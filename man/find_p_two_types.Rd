@@ -3,7 +3,8 @@
 \name{find_p_two_types}
 \alias{find_p_two_types}
 \title{Find a p-value given a certain number of observations in favor of the
-working hypothesis among a total number of observations when there are two types of observations}
+working hypothesis among a total number of observations when there are two
+types of observations}
 \usage{
 find_p_two_types(
   obs_support,
@@ -14,34 +15,57 @@ find_p_two_types(
 )
 }
 \arguments{
-\item{obs_support}{An integer representing the number of
-observations in favor of the working hypothesis. Must be less than or equal to the total.}
+\item{obs_support}{An integer representing the number of observations in
+favor of the working hypothesis. Must be less than or equal to \code{total_obs}.}
 
-\item{total_obs}{An integer representing the total number of observations made}
+\item{total_obs}{An integer representing the total number of observations
+made. It can be greater than or equal to the \code{obs_support}.}
 
 \item{odds}{The odds of observing a rival versus working-theory observation.
 This can be interpreted as "bias" in observation. Or "relative ease" of observation.}
 
-\item{weights}{Double. Default is equal weight for each observation when weights=NULL is \code{rep(1,obs_support)}. To indicate that one observation should have twice the weight of any other one might use \code{rep(c(2,1),c(1,obs_support-1))}}
+\item{weights}{Double vector. Default is equal weight for each observation when
+weights=NULL is \code{rep(1,obs_support)}. To indicate that one observation
+should have twice the weight of any other one might use
+\code{rep(c(2,1),c(1,obs_support-1))}}
 
 \item{interpretation}{Logical. TRUE if the function returns text helping
 to interpret the result, FALSE (default option) to returns only the p-value}
 }
 \value{
-Either a p-value (numeric, scalar) or a list containing the p-value and text containing an interpretation
+Either a p-value (numeric, scalar) or a list containing the p-value
+and text containing an interpretation
 }
 \description{
-When an observation can either support a working theory or a rival theory, this function returns the p-value
-summarizing the evidence against the rival theory provided by the working theory.
+When an observation can either support a working theory or a rival theory,
+this function returns the p-value summarizing the minimum evidence against
+the rival theory provided by the working theory. That is the function
+returns p=.01 we should take this as p<=.01.
 }
 \details{
-This function accomodates urns where working theory supporting observations are systematically easier or more difficulty to observe that rival supporting observations (\code{odds}). And it currently also supports designs where one observation out of the total supporting the working theory is  particularly compelling (a "smoking gun"). For example, if observation 1 is worth 2 other observations, the urn can reflect this by increasing the number of observations supporting the rival theory in the urn, accounting for the weight of that smoking gun observation.
+This function accomodates urns where working theory supporting
+observations are systematically easier or more difficulty to observe that
+rival supporting observations via the \code{odds} argument. And it also
+supports designs where one observation out of the total supporting the
+working theory is  particularly compelling (a "smoking gun"). For example,
+if observation 1 is worth 2 other observations, the urn can reflect this by
+increasing the number of observations supporting the rival theory in the
+urn, accounting for the weight of that smoking gun observation using the
+\code{weights} argument.
+
+The function allows the total number of observations (\code{total_obs}) to
+be larger than the number supporting the working theory
+(\code{obs_support}). This is a design element.
 }
 \examples{
-# Equal probability, 2 kinds of evidence
+# Equal probability
 find_p_two_types(obs_support = 7, total_obs = 10)
-# Equal probability, 2 kinds of evidence with interpretation printed
+# Equal probability with interpretation printed
 find_p_two_types(obs_support = 7, total_obs = 10, interpretation = TRUE)
+# Equal probability where total obs is equal to the number of observations #
+# supporting the working theory. Notice that this is less conservative than
+# the above.
+find_p_two_types(obs_support = 7, total_obs = 7, interpretation = FALSE)
 # Unequal probability, 2 kinds of evidence with interpretation printed
 find_p_two_types(obs_support = 7, total_obs = 10, interpretation = TRUE, odds = .5)
 find_p_two_types(obs_support = 7, total_obs = 10, interpretation = TRUE, odds = 2)
