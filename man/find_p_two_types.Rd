@@ -9,6 +9,7 @@ types of observations}
 find_p_two_types(
   obs_support,
   total_obs,
+  rival_obs = NULL,
   odds = 1,
   weights = NULL,
   interpretation = FALSE
@@ -20,6 +21,9 @@ favor of the working hypothesis. Must be less than or equal to \code{total_obs}.
 
 \item{total_obs}{An integer representing the total number of observations
 made. It can be greater than or equal to the \code{obs_support}.}
+
+\item{rival_obs}{Optional. An integer representing the number of
+observations in the urn that do not support the working theory.}
 
 \item{odds}{The odds of observing a rival versus working-theory observation.
 This can be interpreted as "bias" in observation. Or "relative ease" of observation.}
@@ -43,7 +47,7 @@ the rival theory provided by the working theory. That is the function
 returns p=.01 we should take this as p<=.01.
 }
 \details{
-This function accomodates urns where working theory supporting
+This function accommodates urns where working theory supporting
 observations are systematically easier or more difficulty to observe that
 rival supporting observations via the \code{odds} argument. And it also
 supports designs where one observation out of the total supporting the

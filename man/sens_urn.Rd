@@ -4,13 +4,21 @@
 \alias{sens_urn}
 \title{Sensitivity analysis for urn models with two types of information}
 \usage{
-sens_urn(obs_support, total_obs, weights = NULL, p_threshold = 0.05)
+sens_urn(
+  obs_support,
+  total_obs,
+  rival_obs = NULL,
+  weights = NULL,
+  p_threshold = 0.05
+)
 }
 \arguments{
 \item{obs_support}{An integer representing the number of observations
 in favor of the working hypothesis. Must be less than or equal to the total.}
 
 \item{total_obs}{An integer representing the total number of observations}
+
+\item{rival_obs}{Optional. The number of observations in the urn that do not support the working theory.}
 
 \item{weights}{A vector of numeric weights representing the differential evidentiary weight of the working theory supporting observations.}
 

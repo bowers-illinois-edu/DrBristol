@@ -11,7 +11,7 @@
 #'
 
 #' @details
-#' This function accomodates urns where working theory supporting
+#' This function accommodates urns where working theory supporting
 #' observations are systematically easier or more difficulty to observe that
 #' rival supporting observations via the \code{odds} argument. And it also
 #' supports designs where one observation out of the total supporting the
@@ -30,6 +30,9 @@
 
 #' @param total_obs An integer representing the total number of observations
 #' made. It can be greater than or equal to the \code{obs_support}.
+
+#' @param rival_obs Optional. An integer representing the number of 
+#' observations in the urn that do not support the working theory.
 
 #' @param odds The odds of observing a rival versus working-theory observation.
 #' This can be interpreted as "bias" in observation. Or "relative ease" of observation.
@@ -69,7 +72,7 @@
 #'   weights = rep(c(2, 1), c(1, 7 - 1)), interpretation = TRUE, odds = 1
 #' )
 #' @export
-find_p_two_types <- function(obs_support, total_obs, odds = 1, weights = NULL, interpretation = FALSE) {
+find_p_two_types <- function(obs_support, total_obs, rival_obs = NULL, odds = 1, weights = NULL, interpretation = FALSE) {
   if (is.null(weights)) {
     weights <- rep(1, obs_support)
   }
@@ -83,8 +86,11 @@ find_p_two_types <- function(obs_support, total_obs, odds = 1, weights = NULL, i
   ## observed? TODO
 
   stopifnot(sum(weights) >= obs_support)
+  if(is.null(rival_obs)){
   obs_oppose <- max(c(total_obs - obs_support, sum(weights) + 1, obs_support + 1))
-
+  } else {
+    obs_oppose <- rival_obs
+  }
   ## Test to make sure that obs_support is less than or equal to total_obs
 
   stopifnot("The number of observations in favor of the working hypothesis must

@@ -8,6 +8,7 @@
 #' @param obs_support An integer representing the number of observations
 #' in favor of the working hypothesis. Must be less than or equal to the total.
 #' @param total_obs An integer representing the total number of observations
+#' @param rival_obs Optional. The number of observations in the urn that do not support the working theory.
 #' @param weights A vector of numeric weights representing the differential evidentiary weight of the working theory supporting observations.
 #' @param p_threshold A decimal (Double). The p-value threshold. Default is p=.05.
 #' @return A list with two elements:
@@ -22,12 +23,12 @@
 #' @importFrom BiasedUrn dFNCHypergeo
 #' @importFrom stats uniroot
 #' @export
-sens_urn <- function(obs_support, total_obs, weights = NULL, p_threshold = .05) {
+sens_urn <- function(obs_support, total_obs, rival_obs=NULL, weights = NULL, p_threshold = .05) {
   ## This next is a function that calculates the difference between the p-value and a p-value threshold
   find_odds <- function(omega, obs_support,
                         total_obs, weights, p_threshold) {
     p_found <- find_p_two_types(
-      obs_support = obs_support, total_obs = total_obs,
+      obs_support = obs_support, total_obs = total_obs, rival_obs = rival_obs,
       weights = weights, odds = omega, interpretation = FALSE
     )
     ## For multiple testing later
