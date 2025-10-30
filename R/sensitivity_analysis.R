@@ -23,10 +23,10 @@
 #' @importFrom BiasedUrn dFNCHypergeo
 #' @importFrom stats uniroot
 #' @export
-sens_urn <- function(obs_support, total_obs, rival_obs=NULL, weights = NULL, p_threshold = .05) {
+sens_urn <- function(obs_support, total_obs, rival_obs = NULL, weights = NULL, p_threshold = .05) {
   ## This next is a function that calculates the difference between the p-value and a p-value threshold
   find_odds <- function(omega, obs_support,
-                        total_obs, weights, p_threshold) {
+                        total_obs, rival_obs, weights, p_threshold) {
     p_found <- find_p_two_types(
       obs_support = obs_support, total_obs = total_obs, rival_obs = rival_obs,
       weights = weights, odds = omega, interpretation = FALSE
@@ -38,12 +38,14 @@ sens_urn <- function(obs_support, total_obs, rival_obs=NULL, weights = NULL, p_t
   theodds <- uniroot(
     f = find_odds,
     obs_support = obs_support,
-    total_obs = total_obs, weights = weights, p_threshold = p_threshold,
+    total_obs = total_obs,
+    rival_obs = rival_obs,
+    weights = weights, p_threshold = p_threshold,
     interval = c(.Machine$double.eps, total_obs * 10), trace = 2, extendInt = "upX"
   )$root
 
   thep_at_theodds <- find_p_two_types(
-    obs_support = obs_support, total_obs = total_obs,
+    obs_support = obs_support, total_obs = total_obs, rival_obs = rival_obs,
     weights = weights, odds = theodds, interpretation = FALSE
   )
   return(list(w = theodds, p = thep_at_theodds))
