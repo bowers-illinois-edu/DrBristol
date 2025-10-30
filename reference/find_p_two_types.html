@@ -13,7 +13,7 @@ returns p=.01 we should take this as p&amp;lt;=.01."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">DrBristol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.0000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.1000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,7 @@ returns p=.01 we should take this as p&lt;=.01.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">find_p_two_types</span><span class="op">(</span></span>
 <span>  <span class="va">obs_support</span>,</span>
 <span>  <span class="va">total_obs</span>,</span>
+<span>  rival_obs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  odds <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  interpretation <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -68,6 +69,11 @@ favor of the working hypothesis. Must be less than or equal to <code>total_obs</
 <dt id="arg-total-obs">total_obs<a class="anchor" aria-label="anchor" href="#arg-total-obs"></a></dt>
 <dd><p>An integer representing the total number of observations
 made. It can be greater than or equal to the <code>obs_support</code>.</p></dd>
+
+
+<dt id="arg-rival-obs">rival_obs<a class="anchor" aria-label="anchor" href="#arg-rival-obs"></a></dt>
+<dd><p>Optional. An integer representing the number of
+observations in the urn that do not support the working theory.</p></dd>
 
 
 <dt id="arg-odds">odds<a class="anchor" aria-label="anchor" href="#arg-odds"></a></dt>
@@ -94,7 +100,7 @@ and text containing an interpretation</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function accomodates urns where working theory supporting
+    <p>This function accommodates urns where working theory supporting
 observations are systematically easier or more difficulty to observe that
 rival supporting observations via the <code>odds</code> argument. And it also
 supports designs where one observation out of the total supporting the

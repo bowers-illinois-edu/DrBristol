@@ -11,7 +11,7 @@ required to increase a p-value to above a certain value."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">DrBristol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.0000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.1000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,13 @@ required to increase a p-value to above a certain value.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sens_urn</span><span class="op">(</span><span class="va">obs_support</span>, <span class="va">total_obs</span>, weights <span class="op">=</span> <span class="cn">NULL</span>, p_threshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sens_urn</span><span class="op">(</span></span>
+<span>  <span class="va">obs_support</span>,</span>
+<span>  <span class="va">total_obs</span>,</span>
+<span>  rival_obs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  p_threshold <span class="op">=</span> <span class="fl">0.05</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -58,6 +64,10 @@ in favor of the working hypothesis. Must be less than or equal to the total.</p>
 
 <dt id="arg-total-obs">total_obs<a class="anchor" aria-label="anchor" href="#arg-total-obs"></a></dt>
 <dd><p>An integer representing the total number of observations</p></dd>
+
+
+<dt id="arg-rival-obs">rival_obs<a class="anchor" aria-label="anchor" href="#arg-rival-obs"></a></dt>
+<dd><p>Optional. The number of observations in the urn that do not support the working theory.</p></dd>
 
 
 <dt id="arg-weights">weights<a class="anchor" aria-label="anchor" href="#arg-weights"></a></dt>
