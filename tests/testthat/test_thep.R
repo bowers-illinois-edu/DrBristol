@@ -38,8 +38,18 @@ test_that("P-values with a smoking gun observation are smaller than p-values wit
   expect_lt(res_smoking_gun_4, res_smoking_gun_2)
 })
 
-test_that("We can specify numbers of rival_obs greater than working obs + 1",{
-  res_collapsed_multi_urn<- find_p_two_types(obs_support=7,total_obs=7,rival_obs=4*(7+1))
-    res_one_urn <- find_p_two_types(obs_support=7,total_obs=7)
-  expect_lt(res_collapsed_multi_urn,res_one_urn)
+test_that("We can specify numbers of rival_obs greater than working obs + 1", {
+  res_collapsed_multi_urn <- find_p_two_types(obs_support = 7, total_obs = 7, rival_obs = 4 * (7 + 1))
+  res_one_urn <- find_p_two_types(obs_support = 7, total_obs = 7)
+  expect_lt(res_collapsed_multi_urn, res_one_urn)
 })
+
+## test_that("Multi p runs without error",{
+##
+## res <- multi_urn_p(
+##   n_working = 6, total_n_drawn, urn_tots = c(), odds_vec = rep(1, 3),
+##   list_of_possible_rivals,
+##   evidence_wts = NULL
+## )
+##
+## })
