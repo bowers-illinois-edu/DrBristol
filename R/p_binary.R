@@ -31,7 +31,7 @@
 #' @param total_obs An integer representing the total number of observations
 #' made. It can be greater than or equal to the \code{obs_support}.
 
-#' @param rival_obs Optional. An integer representing the number of 
+#' @param rival_obs Optional. An integer representing the number of
 #' observations in the urn that do not support the working theory.
 
 #' @param odds The odds of observing a rival versus working-theory observation.
@@ -86,8 +86,8 @@ find_p_two_types <- function(obs_support, total_obs, rival_obs = NULL, odds = 1,
   ## observed? TODO
 
   stopifnot(sum(weights) >= obs_support)
-  if(is.null(rival_obs)){
-  obs_oppose <- max(c(total_obs - obs_support, sum(weights) + 1, obs_support + 1))
+  if (is.null(rival_obs)) {
+    obs_oppose <- max(c(total_obs - obs_support, sum(weights) + 1, obs_support + 1))
   } else {
     obs_oppose <- rival_obs
   }

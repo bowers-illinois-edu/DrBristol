@@ -1,52 +1,177 @@
-#' A function to generate p-values from a multivariate Urn model with optional
-#' sensitivity analysis (unequal odds of observation) and weighting (unequal
-#' probative weight)
+#' Multi-rival testing: Max-P approach
 #'
-#' If a set of observations provides evidence against more than one rival
-#' theory, this function will provide a p-value for the hypothesis the
-#' observation made did not come from any of the rivals.
+#' @description
+#' This is a test of the composite or null hypothesis that at
+#' least one rival theory is more consistent with the data than the working
+#' theory: or Rival Theory 1 is true OR Rival Theory 2 is true OR ... Rival k
+#' is true.
+#'
 
-#' @param n_working The number of items supporting the working theory observed
+#' @details We reject this composite hypothesis if we can reject all of the
+#' individual hypotheses. There are two main approaches to this problem: (1) Do
+#' the individual tests and use the maximum p-value (TODO cite Berger on why
+#' the intersection-union test has controlled FWER) or (2) represent this test
+#' as a single test using a multivariate distribution. This function implements
+#' the first option by calling `find_p_two_types()` for each element of the
+#' vectors provided below. This approach tends to be very conservative.
+#'
 
-#' @param tot_n_drawn The total number of items drawn from the urn
+#' @param obs_support A vector of integers representing the number of
+#' observations in favor of the working hypothesis. Each element must be less
+#' than or equal to the corresponding element in `total_obs`.
 
-#' @param urn_tots A vector of the total number of items of each type in the
-#' urn. For example, \code{c(6,7,7,7)} would mean that the urn contains 6 items of
-#' type 1, and 7 items of each of the other three types.
+#' @param total_obs An vector of integers representing the total number of observations
+#' made. Its elements can be can be greater than or equal to the `obs_support`.
 
-#' @param odds_vec A vector with the weight assigned to each type of item in
-#' the urn. For example, c(4,3,2,1) would mean that items of type 1 are 4 times
-#' as likely to be drawn as items of type 4, and 4/2=2 or twice as likely to be
-#' drawn as items of type 3.
+#' @param rival_obs Optional. An integer representing the number of
+#' observations in the urn that do not support the working theory.
 
-#' @param list_of_possible_rivals A list of possible numbers of items drawn
-#' from each rival for example list(0:2,0:3,0:1) would mean that between 0 and
-#' 2 items could be drawn from the first rival, 0 and 3 from the second rival,
-#' and 0 or 1 item could be drawn from the third rival
+#' @param odds The odds of observing a rival versus working-theory observation.
+#' This can be interpreted as "bias" in observation. Or "relative ease" of observation.
 
-#' @param evidence_wts Not yet implemented.
+#' @param weights Double vector. Default is equal weight for each observation when
+#' weights=NULL is `rep(1,obs_support)`. To indicate that one observation
+#' should have twice the weight of any other one might use
+#' `rep(c(2,1),c(1,obs_support-1))`
+
+#' @param interpretation Logical. TRUE if the function returns text helping
+#' to interpret the result, FALSE (default option) to returns only the p-value
+
+#' @return Either a p-value (numeric, scalar) or a list containing the p-value
+#' and text containing an interpretation
 
 #' @examples
-#' # 9 items observed with 6 of them implausible from perspective of rival 1, 7
-#' # of them them implausible from perspective of rival 2, and 8 of them
-#' # implausible from perspective of rival 3.
+#' # Example 1:
+#' # One kind of working theory supporting information that argues against multiple rivals where
+#' # each rival has the same amount of information.
+#' # Notice that we will get the same answer as if we used `find_p_two_types()` directly.
+#' # But we present this here to illustrate.
+#' # 4 rivals, 10 observations of one kind of working theory supporting observation, 10 total observations made
+#' find_p_multi_max_p(obs_support = rep(10, 4), total_obs = rep(10, 4))
+#' find_p_two_types(obs_support = 10, total_obs = 10)
+
+#' # Example 2:
+#' # 4 kinds of working theory supporting observations, each of which is
+#' # inconsistent with a single rival, only working theory supporting observations
+#' # made. Notice the max p:
+#' find_p_multi_max_p(obs_support = c(4, 3, 2, 1), total_obs = c(4, 3, 2, 1))
+#' find_p_two_types(obs_support = 4, total_obs = 4)
+#' find_p_two_types(obs_support = 3, total_obs = 3)
+#' find_p_two_types(obs_support = 2, total_obs = 2)
+#' find_p_two_types(obs_support = 1, total_obs = 1)
+
+#' @export
+find_p_multi_max_p <- function(obs_support, total_obs, rival_obs = NULL, odds = 1, weights = NULL) {
+  k <- length(obs_support)
+  stopifnot(k == length(total_obs))
+
+  if (odds == 1) {
+    odds <- rep(1, k)
+  }
+  if (is.null(weights)) {
+    weights <- rep(NULL, k)
+  }
+  if (is.null(rival_obs)) {
+    rival_obs <- rep(NULL, k)
+  }
+
+  atom_ps <- sapply(seq_len(k), function(i) {
+    atom_p <- find_p_two_types(
+      obs_support = obs_support[i],
+      total_obs = total_obs[i],
+      rival_obs = rival_obs[i],
+      odds = odds[i],
+      weights = weights[i]
+    )
+    return(atom_p)
+  })
+
+  res_p <- max(atom_ps)
+  return(res_p)
+}
+
+
+#' Multi-rival testing: Multivariate Approach
 #'
-#' @import BiasedUrn
+#' @description
+#' This is a test of the composite or null hypothesis that at
+#' least one rival theory is more consistent with the data than the working
+#' theory: or Rival Theory 1 is true OR Rival Theory 2 is true OR ... Rival k
+#' is true.
+#'
+
+#' @details We reject this composite hypothesis if we can reject all of the
+#' individual hypotheses. There are two main approaches to this problem: (1) Do
+#' the individual tests and use the maximum p-value (TODO cite Berger on why
+#' the intersection-union test has controlled FWER) or (2) represent this test
+#' as a single test using a multivariate distribution. This function implements
+#' the second option.
+#'
+
+#' @param obs_support A vector of integers representing the number of
+#' observations in favor of the working hypothesis. Each element must be less
+#' than or equal to the corresponding element in `total_obs`.
+
+#' @param total_obs An integer representing the total number of observations
+#' made. It can be greater than or equal to the sum of `obs_support`.
+
+#' @param rival_obs Optional. An integer representing the number of
+#' observations in the urn that do not support the working theory.
+
+#' @param odds The odds of observing a rival versus working-theory observation.
+#' This can be interpreted as "bias" in observation. Or "relative ease" of observation.
+
+#' @param interpretation Logical. TRUE if the function returns text helping
+#' to interpret the result, FALSE (default option) to returns only the p-value
+
+#' @return Either a p-value (numeric, scalar) or a list containing the p-value
+#' and text containing an interpretation
+
+#' @examples
+#' # Example 1:
+#' # One kind of working theory supporting information that argues against multiple rivals where
+#' # each rival has the same amount of information.
+#' # Notice that we will get the same answer as if we used `find_p_two_types()` directly.
+#' # But we present this here to illustrate.
+#' # 4 rivals, 10 observations of one kind of working theory supporting observation, 10 total observations made
+#' find_p_multi_max_p(obs_support = rep(10, 4), total_obs = rep(10, 4))
+#' find_p_multi_mv(obs_support = rep(10, 4), total_obs = 40)
+#' find_p_two_types(obs_support = 10, total_obs = 10)
+
+#' # Example 2:
+#' # 4 kinds of working theory supporting observations, each of which is
+#' # inconsistent with a single rival, only working theory supporting observations
+#' # made. Notice the max p:
+#' find_p_multi_mv(obs_support = c(4, 3, 2, 1), total_obs = NULL)
+
 #' @export
 
-multi_urn_p <- function(n_working, tot_n_drawn, urn_tots, odds_vec, list_of_possible_rivals, evidence_wts) {
-  ## This next is brute force method and will cause problems if the list of
-  ## possible rivals is long or has many elements because of expand.grid() below. We should either warn or
-  ## come up with a better approach. This works for now.
+find_p_multi_mv <- function(obs_support, total_obs = NULL, rival_obs = NULL, odds = 1) {
+  ## TODO, allow irrelevant or neutral observations
+  ## TODO allow evidence weight
 
-  rival_vectors <- expand.grid(list_of_possible_rivals)
-  rival_vectors$tot <- rowSums(rival_vectors)
-  rival_vectors1 <- rival_vectors[with(rival_vectors, tot == (tot_n_drawn - n_working)), ]
-  atomic_ps <- apply(rival_vectors, 1, function(thevec) {
-    thexvec <- c(n_working, thevec)
-    thep <- dMFNCHypergeo(x = thexvec, m = urn_tots, n = tot_n_drawn, odds = odds_vec)
-    return(thep)
-  })
-  thep <- max(atomic_ps)
-  return(thep)
+  k <- length(obs_support)
+
+  if (is.null(total_obs)) {
+    total_obs <- sum(obs_support)
+  }
+
+  if (is.null(rival_obs)) {
+    obs_oppose <- pmax(total_obs - obs_support, obs_support + 1)
+  } else {
+    stopifnot(length(rival_obs) == k)
+    obs_oppose <- rival_obs
+  }
+
+  x_vec <- c(obs_support, rep(0, length(obs_oppose)))
+
+  if (odds == 1) {
+    odds <- rep(1, length(x_vec))
+  }
+
+  res_p <- dMFNCHypergeo(x = x_vec, m = c(obs_support, obs_oppose), n = total_obs, odds = odds)
+
+
+
+  return(res_p)
 }
