@@ -4,6 +4,11 @@
 #' This is a test of the composite null hypothesis that at least one rival
 #' theory is more consistent with the data than the working theory:
 #' Rival Theory 1 is true OR Rival Theory 2 is true OR ... Rival k is true.
+#' This function tests only INFORMATIVE observations --- those that distinguish
+#' between working theory and rival theories. If you have neutral/uninformative
+#' observations, exclude them before calling this function. The test is:
+#' "Given n informative observations, how likely is this observed pattern if at least
+#' one rival theory is correct?"
 #'
 #' @details
 #' We reject this composite hypothesis if we can reject all of the
@@ -36,9 +41,6 @@
 #'   observations made in favor of the working hypothesis (anti-rival).
 #'   Each element corresponds to evidence against a specific rival.
 #'
-#' @param neutral_obs Optional. An integer representing the number of observations
-#'   that are neither pro-working theory nor pro-rival.
-#'
 #' @param rival_obs Optional. A vector of integers representing the number of
 #'   observations actually made that support each rival. Must be the same length
 #'   as obs_support. If NULL, assumes zero pro-rival observations.
@@ -70,16 +72,13 @@
 #' # Example 3: With pro-rival observations
 #' find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0))
 #'
-#' # Example 4: With neutral observations
-#' find_p_multi_mv(obs_support = c(4, 3, 2, 1), neutral_obs = 2)
 #'
 #' @export
 
-find_p_multi_mv <- function(obs_support, neutral_obs = 0, rival_obs = NULL,
+find_p_multi_mv <- function(obs_support, rival_obs = NULL,
                             odds = 1, interpretation = FALSE,
                             check_evidence = TRUE) {
   k <- length(obs_support)
-  stopifnot(neutral_obs >= 0)
   stopifnot(all(obs_support >= 0))
 
   ## Check if using same evidence against all rivals
@@ -116,18 +115,13 @@ find_p_multi_mv <- function(obs_support, neutral_obs = 0, rival_obs = NULL,
     urn_rival <- pmax(obs_support + 1, rival_obs) # At least obs+1 or observed
   }
 
-  total_obs <- sum(obs_support) + sum(rival_obs) + neutral_obs
+  total_obs <- sum(obs_support) + sum(rival_obs)
 
   ## Urn composition: [anti-rival for each rival, pro-rival for each rival, neutral]
-  if (neutral_obs == 0) {
-    num_neutral_obs <- NULL
-  } else {
-    num_neutral_obs <- neutral_obs
-  }
-  urn_pop <- c(obs_support, urn_rival, num_neutral_obs)
+  urn_pop <- c(obs_support, urn_rival)
 
   ## Observed vector
-  x_obs <- c(obs_support, rival_obs, num_neutral_obs)
+  x_obs <- c(obs_support, rival_obs)
 
   ## Set up odds
   if (length(odds) == 1) {
@@ -159,7 +153,7 @@ find_p_multi_mv <- function(obs_support, neutral_obs = 0, rival_obs = NULL,
     )
 
     for (i in 1:n_allocations) {
-      rejection_outcomes[i, ] <- c(obs_support, rival_allocations[i, ], num_neutral_obs)
+      rejection_outcomes[i, ] <- c(obs_support, rival_allocations[i, ])
     }
 
     # Filter to respect urn population constraints
