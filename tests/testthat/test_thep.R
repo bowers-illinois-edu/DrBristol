@@ -44,12 +44,43 @@ test_that("We can specify numbers of rival_obs greater than working obs + 1", {
   expect_lt(res_collapsed_multi_urn, res_one_urn)
 })
 
-## test_that("Multi p runs without error",{
-##
-## res <- multi_urn_p(
-##   n_working = 6, total_n_drawn, urn_tots = c(), odds_vec = rep(1, 3),
-##   list_of_possible_rivals,
-##   evidence_wts = NULL
-## )
-##
-## })
+
+test_that("The multi urn functions run without error", {
+  #' # Example 1:
+  #' # One kind of working theory supporting information that argues against multiple rivals where
+  #' # each rival has the same amount of information.
+  #' # Notice that we will get the same answer as if we used `find_p_two_types()` directly.
+  #' # But we present this here to illustrate.
+  #' # 4 rivals, 10 observations of one kind of working theory supporting
+  #' # observation, 10 total observations made
+  find_p_multi_max_p(obs_support = rep(10, 4), total_obs = rep(10, 4))
+  ## find_p_multi_mv(obs_support = c(10, 10, 10, 10))
+  find_p_two_types(obs_support = 10, total_obs = 10)
+  find_p_multi_max_p(obs_support = rep(10, 4), total_obs = rep(10, 4), odds = 2)
+  find_p_multi_mv(obs_support = c(10, 10, 10, 10), odds = 2, messages = FALSE)
+
+  #' # Example 2: No pro-rival observations made, different anti-rival evidence levels
+  find_p_multi_mv(obs_support = c(4, 3, 2, 1))
+  #'
+  #' # Example 3: With pro-rival observations
+  find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0))
+  ##'
+  ##' # Example 4: With pro-rival observations and non-uniform odds
+  find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0), odds = 2)
+  find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0), odds = .5)
+
+  # Example 5: Overlapping evidence
+  evidence_patterns <- rbind(
+    c(1, 1, 0), # antiMiasma and_antiFood
+    c(1, 0, 0), # antiMiasma_only
+    c(0, 0, 1) # antiAnimal_only
+  )
+  colnames(evidence_patterns) <- c("Miasma", "Food", "Animal")
+
+  observed_counts <- c(4, 1, 2) # 4 overlap, 1 Miasma-only, 2 Animal-only
+  result <- find_p_multi_mv(
+    obs_support = observed_counts,
+    evidence_matrix = evidence_patterns,
+    interpretation = TRUE
+  )
+})

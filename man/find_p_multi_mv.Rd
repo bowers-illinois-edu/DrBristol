@@ -7,6 +7,7 @@
 find_p_multi_mv(
   obs_support,
   rival_obs = NULL,
+  evidence_matrix = NULL,
   weights = NULL,
   odds = 1,
   interpretation = FALSE,
@@ -22,6 +23,11 @@ Each element corresponds to evidence against a specific rival.}
 \item{rival_obs}{Optional. A vector of integers representing the number of
 observations actually made that support each rival. Must be the same length
 as obs_support. If NULL, assumes zero pro-rival observations.}
+
+\item{evidence_matrix}{Optional. A matrix where rows are evidence types and
+columns are rivals. Entry i,j = 1 if evidence type i argues against
+rival j, 0 otherwise. If provided, obs_support is interpreted as counts
+of each evidence type.}
 
 \item{weights}{Not used yet.}
 
@@ -104,4 +110,20 @@ find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0))
 # Example 4: With pro-rival observations and non-uniform odds
 find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0), odds = 2)
 find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0), odds = .5)
+evidence_patterns <- rbind(
+  c(1, 1, 0), # antiMiasma and_antiFood
+  c(1, 0, 0), # antiMiasma_only
+  c(0, 0, 1) # antiAnimal_only
+)
+colnames(evidence_patterns) <- c("Miasma", "Food", "Animal")
+
+observed_counts <- c(4, 1, 2) # 4 overlap, 1 Miasma-only, 2 Animal-only
+result <- find_p_multi_mv(
+  obs_support = observed_counts,
+  evidence_matrix = evidence_patterns,
+  interpretation = TRUE
+)
+
+print(result$interpretation)
+print(result$p)
 }

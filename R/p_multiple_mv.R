@@ -44,7 +44,12 @@
 #' @param rival_obs Optional. A vector of integers representing the number of
 #'   observations actually made that support each rival. Must be the same length
 #'   as obs_support. If NULL, assumes zero pro-rival observations.
-#'
+
+#' @param evidence_matrix Optional. A matrix where rows are evidence types and
+#'   columns are rivals. Entry i,j = 1 if evidence type i argues against
+#'   rival j, 0 otherwise. If provided, obs_support is interpreted as counts
+#'   of each evidence type.
+
 #' @param weights Not used yet.
 #'
 
@@ -92,10 +97,31 @@
 #' find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0), odds = 2)
 #' find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0), odds = .5)
 
+
+# Example 5: Overlapping evidence
+#' evidence_patterns <- rbind(
+#'   c(1, 1, 0), # antiMiasma and_antiFood
+#'   c(1, 0, 0), # antiMiasma_only
+#'   c(0, 0, 1) # antiAnimal_only
+#' )
+#' colnames(evidence_patterns) <- c("Miasma", "Food", "Animal")
+#'
+#' observed_counts <- c(4, 1, 2) # 4 overlap, 1 Miasma-only, 2 Animal-only
+#' result <- find_p_multi_mv(
+#'   obs_support = observed_counts,
+#'   evidence_matrix = evidence_patterns,
+#'   interpretation = TRUE
+#' )
+#'
+#' print(result$interpretation)
+#' print(result$p)
+
 #' @importFrom BiasedUrn dMFNCHypergeo
 #' @export
 
-find_p_multi_mv <- function(obs_support, rival_obs = NULL, weights = NULL,
+find_p_multi_mv <- function(obs_support, rival_obs = NULL,
+                            evidence_matrix = NULL,
+                            weights = NULL,
                             odds = 1, interpretation = FALSE,
                             check_evidence = TRUE, messages = TRUE) {
   k <- length(obs_support)
@@ -129,6 +155,138 @@ find_p_multi_mv <- function(obs_support, rival_obs = NULL, weights = NULL,
     }
   }
 
+  # If evidence_matrix provided, handle overlapping evidence
+  if (!is.null(evidence_matrix)) {
+    # obs_support now represents counts of each EVIDENCE TYPE
+    n_evidence_types <- length(obs_support)
+    n_rivals <- ncol(evidence_matrix)
+
+    stopifnot(nrow(evidence_matrix) == n_evidence_types)
+    stopifnot(all(evidence_matrix %in% c(0, 1)))
+
+    # Compute net evidence against each rival
+    net_evidence_against <- as.numeric(obs_support %*% evidence_matrix)
+
+    # Set up urn composition
+    # For each evidence TYPE, urn has obs+1
+    urn_evidence_types <- obs_support + 1
+
+    # For rival observations, we need pro-rival evidence types
+    # Create mirror evidence types for pro-rival
+    urn_pro_rival_types <- urn_evidence_types # Same abundance for pro-rival
+
+    total_obs <- sum(obs_support) + ifelse(is.null(rival_obs), 0, sum(rival_obs))
+
+    # Urn composition by EVIDENCE TYPE
+    urn_pop <- c(urn_evidence_types, urn_pro_rival_types)
+
+    # Observed vector by EVIDENCE TYPE
+    if (is.null(rival_obs)) {
+      x_obs <- c(obs_support, rep(0, n_evidence_types))
+      total_rival_obs <- 0
+    } else {
+      x_obs <- c(obs_support, rival_obs)
+      total_rival_obs <- sum(rival_obs)
+    }
+
+    # Generate rejection region
+    if (total_rival_obs == 0) {
+      rejection_outcomes <- matrix(x_obs, nrow = 1)
+    } else {
+      # Generate allocations of pro-rival observations
+      rival_allocations <- generate_compositions(total_rival_obs, n_evidence_types)
+
+      n_allocations <- nrow(rival_allocations)
+      rejection_outcomes <- matrix(0, nrow = n_allocations, ncol = length(x_obs))
+
+      for (i in 1:n_allocations) {
+        rejection_outcomes[i, ] <- c(obs_support, rival_allocations[i, ])
+      }
+
+      # Filter to respect urn constraints
+      valid_outcomes <- apply(rejection_outcomes, 1, function(x) all(x <= urn_pop))
+      rejection_outcomes <- rejection_outcomes[valid_outcomes, , drop = FALSE]
+    }
+
+    # Set up odds
+    if (odds == 1) {
+      odds_vec <- rep(1, length(urn_pop))
+    } else {
+      odds_vec <- c(rep(odds, n_evidence_types), rep(1, n_evidence_types))
+    }
+
+    # Compute probabilities
+    probs <- apply(rejection_outcomes, 1, function(x) {
+      return(dMFNCHypergeo(x = x, m = urn_pop, n = total_obs, odds = odds_vec))
+    })
+
+    res_p <- sum(probs)
+
+    if (interpretation) {
+      obs_prob <- dMFNCHypergeo(x = x_obs, m = urn_pop, n = total_obs, odds = odds_vec)
+
+      # Report net evidence against each rival
+      interpretation_text <- sprintf(
+        "Evidence pattern (overlapping):\n"
+      )
+
+      for (i in 1:n_evidence_types) {
+        rivals_affected <- colnames(evidence_matrix)[evidence_matrix[i, ] == 1]
+        interpretation_text <- paste0(
+          interpretation_text,
+          sprintf(
+            "  %d observations argue against: %s\n",
+            obs_support[i], paste(rivals_affected, collapse = " & ")
+          )
+        )
+      }
+
+      interpretation_text <- paste0(
+        interpretation_text,
+        sprintf("\nNet evidence against each rival:\n")
+      )
+
+      for (j in 1:n_rivals) {
+        interpretation_text <- paste0(
+          interpretation_text,
+          sprintf(
+            "  %s: %d pieces\n", colnames(evidence_matrix)[j],
+            net_evidence_against[j]
+          )
+        )
+      }
+
+      interpretation_text <- paste0(
+        interpretation_text,
+        sprintf("\nP-value: %.4f\n", res_p),
+        sprintf("Probability of observed pattern: %.6f\n", obs_prob)
+      )
+
+      if (res_p <= 0.05) {
+        interpretation_text <- paste0(
+          interpretation_text,
+          "\nInterpretation: We reject the union null hypothesis.\n"
+        )
+      } else {
+        interpretation_text <- paste0(
+          interpretation_text,
+          "\nInterpretation: We cannot reject the union null hypothesis.\n"
+        )
+      }
+
+      return(list(
+        p_value = res_p,
+        observed_prob = obs_prob,
+        net_evidence_against = net_evidence_against,
+        n_outcomes_rejection_region = nrow(rejection_outcomes),
+        interpretation = interpretation_text
+      ))
+    }
+
+    return(res_p)
+  }
+
+  ### The rest of the function is for the non-overlapping approach
   ## Set up urn composition and observations
   if (is.null(rival_obs)) {
     rival_obs <- rep(0, k)
