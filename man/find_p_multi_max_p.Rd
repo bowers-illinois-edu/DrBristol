@@ -59,7 +59,8 @@ vectors provided below. This approach tends to be very conservative.
 # each rival has the same amount of information.
 # Notice that we will get the same answer as if we used `find_p_two_types()` directly.
 # But we present this here to illustrate.
-# 4 rivals, 10 observations of one kind of working theory supporting observation, 10 total observations made
+# 4 rivals, 10 observations of one kind of working theory supporting
+# observation, 10 total observations made
 find_p_multi_max_p(obs_support = rep(10, 4), total_obs = rep(10, 4))
 find_p_two_types(obs_support = 10, total_obs = 10)
 # Example 2:

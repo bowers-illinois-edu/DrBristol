@@ -29,12 +29,12 @@ test_that("Sensitivity analysis function gives same answer as the by hand versio
   found_p_ex2 <- find_p_two_types(obs_support = 2, total_obs = 3, odds = found_odds_ex1)
 
   set.seed(12345)
-  sens_ex1 <- sens_urn(obs_support = 2, total_obs = 3)
+  sens_ex1 <- sens_obs_two_types(obs_support = 2, total_obs = 3)
   expect_equal(found_odds_ex1, sens_ex1$w)
   expect_equal(found_p_ex1, sens_ex1$p)
 
   set.seed(12345)
-  sens_ex2 <- sens_urn(obs_support = 7, total_obs = 10)
+  sens_ex2 <- sens_obs_two_types(obs_support = 7, total_obs = 10)
   ## The solution when we solve for w from the non-central/biased hypergeometric with 7 obs
   p_fun_x7 <- function(w) {
     (8 * w^5) / (3 + 40 * w + 140 * w^2 + 168 * w^3 + 70 * w^4 + 8 * w^5)

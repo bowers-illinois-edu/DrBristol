@@ -46,7 +46,8 @@
 #' # each rival has the same amount of information.
 #' # Notice that we will get the same answer as if we used `find_p_two_types()` directly.
 #' # But we present this here to illustrate.
-#' # 4 rivals, 10 observations of one kind of working theory supporting observation, 10 total observations made
+#' # 4 rivals, 10 observations of one kind of working theory supporting
+#' # observation, 10 total observations made
 #' find_p_multi_max_p(obs_support = rep(10, 4), total_obs = rep(10, 4))
 #' find_p_two_types(obs_support = 10, total_obs = 10)
 
@@ -64,16 +65,18 @@
 find_p_multi_max_p <- function(obs_support, total_obs, rival_obs = NULL, odds = 1, weights = NULL) {
   k <- length(obs_support)
   stopifnot(k == length(total_obs))
+  stopifnot("For now, odds must be scalar reflecting different chances of
+            drawing working versus rival obs" = length(odds) == 1)
 
-  if (odds == 1) {
-    odds <- rep(1, k)
-  }
   if (is.null(weights)) {
     weights <- rep(NULL, k)
   }
   if (is.null(rival_obs)) {
     rival_obs <- rep(NULL, k)
   }
+
+  ## Set up odds
+  odds <- rep(odds, k)
 
   atom_ps <- sapply(seq_len(k), function(i) {
     atom_p <- find_p_two_types(

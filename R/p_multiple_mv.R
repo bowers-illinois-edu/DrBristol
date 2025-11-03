@@ -45,15 +45,28 @@
 #'   observations actually made that support each rival. Must be the same length
 #'   as obs_support. If NULL, assumes zero pro-rival observations.
 #'
-#' @param odds The odds ratio for sampling (default 1 for central hypergeometric).
-#'   Can be a scalar or vector matching the urn composition length.
+#' @param weights Not used yet.
+#'
+
+#' @param odds The odds ratio for sampling (default 1 for central
+#' hypergeometric). Currently a scalar indicating odds of seeing any working
+#' theory observations versus any rivals. To complicate in future versions.
+
 #'
 #' @param interpretation Logical. If TRUE, returns interpretation text with p-value.
 #'
+
 #' @param check_evidence Logical. If TRUE, checks if obs_support are identical
-#'   across all rivals and suggests using find_p_multi_max_p() instead.
+#' across all rivals and suggests using find_p_multi_max_p() instead. By pass
+#' this message, set `check_evidence=FALSE` and `messages=FALSE`
 #'
-#' @return Either a numeric p-value (scalar) or a list with p-value and interpretation.
+
+#' @param messages Logical. If TRUE, prints out a long message if `obs_support`
+#' is identical across all rivals and `rival_obs=NULL`. If FALSE, doesn't print
+#' that message.
+
+#' @return
+#' Either a numeric p-value (scalar) or a list with p-value and interpretation.
 #'
 #' @examples
 #' # Example 1:
@@ -61,39 +74,49 @@
 #' # each rival has the same amount of information.
 #' # Notice that we will get the same answer as if we used `find_p_two_types()` directly.
 #' # But we present this here to illustrate.
-#' # 4 rivals, 10 observations of one kind of working theory supporting observation, 10 total observations made
+#' # 4 rivals, 10 observations of one kind of working theory supporting
+#' # observation, 10 total observations made
 #' find_p_multi_max_p(obs_support = rep(10, 4), total_obs = rep(10, 4))
 #' find_p_multi_mv(obs_support = c(10, 10, 10, 10))
 #' find_p_two_types(obs_support = 10, total_obs = 10)
+#' find_p_multi_max_p(obs_support = rep(10, 4), total_obs = rep(10, 4), odds = 2)
+#' find_p_multi_mv(obs_support = c(10, 10, 10, 10), odds = 2, messages = FALSE)
 
 #' # Example 2: No pro-rival observations made, different anti-rival evidence levels
 #' find_p_multi_mv(obs_support = c(4, 3, 2, 1))
 #'
 #' # Example 3: With pro-rival observations
 #' find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0))
-#'
-#'
+##'
+##' # Example 4: With pro-rival observations and non-uniform odds
+#' find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0), odds = 2)
+#' find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0), odds = .5)
+
 #' @export
 
-find_p_multi_mv <- function(obs_support, rival_obs = NULL,
+find_p_multi_mv <- function(obs_support, rival_obs = NULL, weights = NULL,
                             odds = 1, interpretation = FALSE,
-                            check_evidence = TRUE) {
+                            check_evidence = TRUE, messages = TRUE) {
   k <- length(obs_support)
   stopifnot(all(obs_support >= 0))
+  stopifnot("For now, odds must be scalar reflecting different chances of
+            drawing working versus rival obs" = length(odds) == 1)
 
   ## Check if using same evidence against all rivals
-  if (check_evidence && is.null(rival_obs)) {
+  if (check_evidence && (is.null(rival_obs) || all(rival_obs == 0))) {
     unique_obs_support <- unique(obs_support)
 
     if (length(unique_obs_support) == 1) {
-      message(strwrap("It looks like you have only one kind of evidence that is
+      if (messages) {
+        message(strwrap("It looks like you have only one kind of evidence that is
         inconsistent with multiple rivals. You would over-state your evidence
         against the rivals if we used a multivariate null-model by repeating the
         same number of anti-Rival observations. We are reporting here the
         p-value from the find_p_multi_max_p command. If you actually do have
         multiple types of observations but happen to have the same numbers of
         them, then you should try this command again but set
-        check_evidence=FALSE", prefix = " ", initial = ""))
+        check_evidence=FALSE and messages=FALSE", prefix = " ", initial = ""))
+      }
 
       res_p <- find_p_multi_max_p(
         obs_support = obs_support,
@@ -124,8 +147,11 @@ find_p_multi_mv <- function(obs_support, rival_obs = NULL,
   x_obs <- c(obs_support, rival_obs)
 
   ## Set up odds
-  if (length(odds) == 1) {
+  if (odds == 1) {
     odds <- rep(odds, length(urn_pop))
+  } else {
+    ## Set the odds of the rival at 1 and then enable lower or higher odds for the observed data
+    odds <- c(rep(odds, length(obs_support)), rep(1, length(urn_rival)))
   }
 
   ## Generate rejection region outcomes
@@ -171,8 +197,7 @@ find_p_multi_mv <- function(obs_support, rival_obs = NULL,
   ## Compute probability for each outcome in rejection region
   probs <- apply(rejection_outcomes, 1, function(x) {
     a_p <- dMFNCHypergeo(
-      x = x, m = urn_pop, n = total_obs, odds = odds,
-      precision = 1e-12
+      x = x, m = urn_pop, n = total_obs, odds = odds
     )
     return(a_p)
   })
@@ -184,7 +209,7 @@ find_p_multi_mv <- function(obs_support, rival_obs = NULL,
   if (interpretation) {
     obs_prob <- dMFNCHypergeo(
       x = x_obs, m = urn_pop, n = total_obs,
-      odds = odds, precision = 1e-12
+      odds = odds
     )
 
     interpretation_text <- sprintf(

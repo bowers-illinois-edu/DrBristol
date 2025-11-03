@@ -72,7 +72,8 @@
 #'   weights = rep(c(2, 1), c(1, 7 - 1)), interpretation = TRUE, odds = 1
 #' )
 #' @export
-find_p_two_types <- function(obs_support, total_obs, rival_obs = NULL, odds = 1, weights = NULL, interpretation = FALSE) {
+find_p_two_types <- function(obs_support, total_obs, rival_obs = NULL,
+                             odds = 1, weights = NULL, interpretation = FALSE) {
   if (is.null(weights)) {
     weights <- rep(1, obs_support)
   }

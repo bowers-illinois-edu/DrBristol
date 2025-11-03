@@ -6,11 +6,12 @@
 \usage{
 find_p_multi_mv(
   obs_support,
-  neutral_obs = 0,
   rival_obs = NULL,
+  weights = NULL,
   odds = 1,
   interpretation = FALSE,
-  check_evidence = TRUE
+  check_evidence = TRUE,
+  messages = TRUE
 )
 }
 \arguments{
@@ -18,20 +19,25 @@ find_p_multi_mv(
 observations made in favor of the working hypothesis (anti-rival).
 Each element corresponds to evidence against a specific rival.}
 
-\item{neutral_obs}{Optional. An integer representing the number of observations
-that are neither pro-working theory nor pro-rival.}
-
 \item{rival_obs}{Optional. A vector of integers representing the number of
 observations actually made that support each rival. Must be the same length
 as obs_support. If NULL, assumes zero pro-rival observations.}
 
-\item{odds}{The odds ratio for sampling (default 1 for central hypergeometric).
-Can be a scalar or vector matching the urn composition length.}
+\item{weights}{Not used yet.}
+
+\item{odds}{The odds ratio for sampling (default 1 for central
+hypergeometric). Currently a scalar indicating odds of seeing any working
+theory observations versus any rivals. To complicate in future versions.}
 
 \item{interpretation}{Logical. If TRUE, returns interpretation text with p-value.}
 
 \item{check_evidence}{Logical. If TRUE, checks if obs_support are identical
-across all rivals and suggests using find_p_multi_max_p() instead.}
+across all rivals and suggests using find_p_multi_max_p() instead. By pass
+this message, set \code{check_evidence=FALSE} and \code{messages=FALSE}}
+
+\item{messages}{Logical. If TRUE, prints out a long message if \code{obs_support}
+is identical across all rivals and \code{rival_obs=NULL}. If FALSE, doesn't print
+that message.}
 }
 \value{
 Either a numeric p-value (scalar) or a list with p-value and interpretation.
@@ -40,6 +46,11 @@ Either a numeric p-value (scalar) or a list with p-value and interpretation.
 This is a test of the composite null hypothesis that at least one rival
 theory is more consistent with the data than the working theory:
 Rival Theory 1 is true OR Rival Theory 2 is true OR ... Rival k is true.
+This function tests only INFORMATIVE observations --- those that distinguish
+between working theory and rival theories. If you have neutral/uninformative
+observations, exclude them before calling this function. The test is:
+"Given n informative observations, how likely is this observed pattern if at least
+one rival theory is correct?"
 }
 \details{
 We reject this composite hypothesis if we can reject all of the
@@ -77,17 +88,20 @@ in the population is obs_support + 1 for each rival (following Lopez and Bowers 
 # each rival has the same amount of information.
 # Notice that we will get the same answer as if we used `find_p_two_types()` directly.
 # But we present this here to illustrate.
-# 4 rivals, 10 observations of one kind of working theory supporting observation, 10 total observations made
+# 4 rivals, 10 observations of one kind of working theory supporting
+# observation, 10 total observations made
 find_p_multi_max_p(obs_support = rep(10, 4), total_obs = rep(10, 4))
 find_p_multi_mv(obs_support = c(10, 10, 10, 10))
 find_p_two_types(obs_support = 10, total_obs = 10)
+find_p_multi_max_p(obs_support = rep(10, 4), total_obs = rep(10, 4), odds = 2)
+find_p_multi_mv(obs_support = c(10, 10, 10, 10), odds = 2, messages = FALSE)
 # Example 2: No pro-rival observations made, different anti-rival evidence levels
 find_p_multi_mv(obs_support = c(4, 3, 2, 1))
 
 # Example 3: With pro-rival observations
 find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0))
 
-# Example 4: With neutral observations
-find_p_multi_mv(obs_support = c(4, 3, 2, 1), neutral_obs = 2)
-
+# Example 4: With pro-rival observations and non-uniform odds
+find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0), odds = 2)
+find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0), odds = .5)
 }
