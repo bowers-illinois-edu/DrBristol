@@ -7,6 +7,8 @@
 find_odds_multi(omega, obs_support, rival_obs, weights, p_threshold)
 }
 \arguments{
+\item{omega}{Candidate odds ratio being evaluated by the root finder.}
+
 \item{obs_support}{A vector of integers representing the number of
 observations made in favor of the working hypothesis (anti-rival).
 Each element corresponds to evidence against a specific rival.}

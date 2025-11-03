@@ -55,6 +55,7 @@ sens_obs_two_types <- function(obs_support, total_obs, rival_obs = NULL, weights
 #' A helper function for `sens_obs_two_types()` see `find_p_two_types()` for details.
 #'
 #' @inheritParams find_p_two_types
+#' @param omega Candidate odds ratio being evaluated by the root finder.
 #' @param p_threshold A number between 0 and 1 indicating the critical value of the test.
 #'
 #' @export

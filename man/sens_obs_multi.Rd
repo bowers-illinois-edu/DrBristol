@@ -21,8 +21,6 @@ in favor of the working hypothesis. Must be less than or equal to the total.}
 evidentiary weight of the working theory supporting observations.}
 
 \item{p_threshold}{A decimal (Double). The p-value threshold. Default is p=.05.}
-
-\item{total_obs}{An integer representing the total number of observations}
 }
 \value{
 A list with two elements:

@@ -92,6 +92,7 @@
 #' find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0), odds = 2)
 #' find_p_multi_mv(obs_support = c(4, 3, 2, 1), rival_obs = c(1, 1, 0, 0), odds = .5)
 
+#' @importFrom BiasedUrn dMFNCHypergeo
 #' @export
 
 find_p_multi_mv <- function(obs_support, rival_obs = NULL, weights = NULL,

@@ -14,6 +14,8 @@ find_odds_two_types(
 )
 }
 \arguments{
+\item{omega}{Candidate odds ratio being evaluated by the root finder.}
+
 \item{obs_support}{An integer representing the number of observations in
 favor of the working hypothesis. Must be less than or equal to \code{total_obs}.}
 

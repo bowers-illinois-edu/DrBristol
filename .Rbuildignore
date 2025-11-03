@@ -7,3 +7,5 @@
 ^\.github$
 Makefile
 .lintr
+^junkbox\.R$
+^junkcode\.R$

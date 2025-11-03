@@ -34,11 +34,7 @@
 #' should have twice the weight of any other one might use
 #' `rep(c(2,1),c(1,obs_support-1))`
 
-#' @param interpretation Logical. TRUE if the function returns text helping
-#' to interpret the result, FALSE (default option) to returns only the p-value
-
-#' @return Either a p-value (numeric, scalar) or a list containing the p-value
-#' and text containing an interpretation
+#' @return A numeric p-value equal to the maximum across the rival-specific tests.
 
 #' @examples
 #' # Example 1:

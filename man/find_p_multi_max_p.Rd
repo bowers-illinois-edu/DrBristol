@@ -30,13 +30,9 @@ This can be interpreted as "bias" in observation. Or "relative ease" of observat
 weights=NULL is \code{rep(1,obs_support)}. To indicate that one observation
 should have twice the weight of any other one might use
 \code{rep(c(2,1),c(1,obs_support-1))}}
-
-\item{interpretation}{Logical. TRUE if the function returns text helping
-to interpret the result, FALSE (default option) to returns only the p-value}
 }
 \value{
-Either a p-value (numeric, scalar) or a list containing the p-value
-and text containing an interpretation
+A numeric p-value equal to the maximum across the rival-specific tests.
 }
 \description{
 This is a test of the composite or null hypothesis that at

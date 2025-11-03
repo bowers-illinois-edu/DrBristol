@@ -8,8 +8,6 @@
 #' @param obs_support An integer representing the number of observations
 #' in favor of the working hypothesis. Must be less than or equal to the total.
 
-#' @param total_obs An integer representing the total number of observations
-
 #' @param rival_obs Optional. The number of observations in the urn that do not support the working theory.
 
 #' @param weights A vector of numeric weights representing the differential
@@ -75,6 +73,7 @@ sens_obs_multi <- function(obs_support, rival_obs = NULL, weights = NULL, p_thre
 #' A helper function for `sens_obs_two_types()` see `find_p_multi_mv()` for details.
 #'
 #' @inheritParams find_p_multi_mv
+#' @param omega Candidate odds ratio being evaluated by the root finder.
 #' @param p_threshold A number between 0 and 1 indicating the critical value of the test.
 #'
 #' @export
