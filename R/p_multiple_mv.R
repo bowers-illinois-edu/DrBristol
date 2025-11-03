@@ -258,8 +258,8 @@ find_p_multi_mv <- function(obs_support, rival_obs = NULL,
 
       interpretation_text <- paste0(
         interpretation_text,
-        sprintf("\nP-value: %.4f\n", res_p),
-        sprintf("Probability of observed pattern: %.6f\n", obs_prob)
+        sprintf("\nP-value: %.4f\n", res_p) # ,
+        # sprintf("Probability of observed pattern: %.6f\n", obs_prob)
       )
 
       if (res_p <= 0.05) {
