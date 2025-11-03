@@ -87,16 +87,10 @@ weights=NULL is <code>rep(1,obs_support)</code>. To indicate that one observatio
 should have twice the weight of any other one might use
 <code>rep(c(2,1),c(1,obs_support-1))</code></p></dd>
 
-
-<dt id="arg-interpretation">interpretation<a class="anchor" aria-label="anchor" href="#arg-interpretation"></a></dt>
-<dd><p>Logical. TRUE if the function returns text helping
-to interpret the result, FALSE (default option) to returns only the p-value</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Either a p-value (numeric, scalar) or a list containing the p-value
-and text containing an interpretation</p>
+    <p>A numeric p-value equal to the maximum across the rival-specific tests.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
