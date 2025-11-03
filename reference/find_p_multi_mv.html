@@ -21,7 +21,7 @@ one rival theory is correct?"'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">DrBristol</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.2000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.3000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,6 +62,7 @@ one rival theory is correct?"</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">find_p_multi_mv</span><span class="op">(</span></span>
 <span>  <span class="va">obs_support</span>,</span>
 <span>  rival_obs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  evidence_matrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  odds <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  interpretation <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -84,6 +85,13 @@ Each element corresponds to evidence against a specific rival.</p></dd>
 <dd><p>Optional. A vector of integers representing the number of
 observations actually made that support each rival. Must be the same length
 as obs_support. If NULL, assumes zero pro-rival observations.</p></dd>
+
+
+<dt id="arg-evidence-matrix">evidence_matrix<a class="anchor" aria-label="anchor" href="#arg-evidence-matrix"></a></dt>
+<dd><p>Optional. A matrix where rows are evidence types and
+columns are rivals. Entry i,j = 1 if evidence type i argues against
+rival j, 0 otherwise. If provided, obs_support is interpreted as counts
+of each evidence type.</p></dd>
 
 
 <dt id="arg-weights">weights<a class="anchor" aria-label="anchor" href="#arg-weights"></a></dt>
@@ -172,6 +180,24 @@ in the population is obs_support + 1 for each rival (following Lopez and Bowers 
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0007486185</span>
 <span class="r-in"><span><span class="fu">find_p_multi_mv</span><span class="op">(</span>obs_support <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>, rival_obs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, odds <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.310727e-07</span>
+<span class="r-in"><span><span class="va">evidence_patterns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>, <span class="co"># antiMiasma and_antiFood</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="co"># antiMiasma_only</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span> <span class="co"># antiAnimal_only</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">evidence_patterns</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Miasma"</span>, <span class="st">"Food"</span>, <span class="st">"Animal"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">observed_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span> <span class="co"># 4 overlap, 1 Miasma-only, 2 Animal-only</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">find_p_multi_mv</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  obs_support <span class="op">=</span> <span class="va">observed_counts</span>,</span></span>
+<span class="r-in"><span>  evidence_matrix <span class="op">=</span> <span class="va">evidence_patterns</span>,</span></span>
+<span class="r-in"><span>  interpretation <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">interpretation</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Evidence pattern (overlapping):\n  4 observations argue against: Miasma &amp; Food\n  1 observations argue against: Miasma\n  2 observations argue against: Animal\n\nNet evidence against each rival:\n  Miasma: 5 pieces\n  Food: 4 pieces\n  Animal: 2 pieces\n\nP-value: 0.0004\nProbability of observed pattern: 0.000387\n\nInterpretation: We reject the union null hypothesis.\n"</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">p</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0003869969</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
